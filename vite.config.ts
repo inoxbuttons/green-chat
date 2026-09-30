@@ -35,6 +35,7 @@ function csp(apiOverride?: string): Plugin {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_');
   return {
+    base: process.env.BASE_PATH ?? '/',
     plugins: [react(), csp(env.VITE_GREEN_API_URL)],
     resolve: {
       alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
