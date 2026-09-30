@@ -1,18 +1,15 @@
 import { cloneElement, useEffect, useRef, type ReactElement, type Ref } from 'react';
-import { cx } from '@/shared/lib/cx';
 import s from './Tooltip.module.css';
 import { usePopover, type Placement } from './usePopover';
 
 interface TooltipProps {
   label: string;
   placement?: Placement;
-  /** Один интерактивный элемент, принимающий ref. */
   children: ReactElement<{ ref?: Ref<HTMLElement>; 'aria-describedby'?: string }>;
 }
 
 const SHOW_DELAY_MS = 350;
 
-/** Подсказка в top layer: не обрезается скроллируемыми контейнерами. */
 export function Tooltip({ label, placement = 'right', children }: TooltipProps) {
   const { id, show, hide, anchorRef, popoverProps } = usePopover<HTMLElement>({
     placement,
@@ -52,7 +49,7 @@ export function Tooltip({ label, placement = 'right', children }: TooltipProps) 
   return (
     <>
       {cloneElement(children, { ref: anchorRef, 'aria-describedby': id })}
-      <div {...popoverProps} role="tooltip" className={cx(s.tooltip)}>
+      <div {...popoverProps} role="tooltip" className={s.tooltip}>
         {label}
       </div>
     </>

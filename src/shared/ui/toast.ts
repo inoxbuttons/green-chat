@@ -21,7 +21,6 @@ let nextId = 1;
 export const useToastStore = create<ToastState>((set, get) => ({
   toasts: [],
   push: (text, tone = 'info') => {
-    // Одинаковые сообщения подряд не дублируем.
     if (get().toasts.some((t) => t.text === text)) return;
     const id = nextId++;
     set((s) => ({ toasts: [...s.toasts, { id, text, tone }].slice(-MAX_VISIBLE) }));

@@ -3,11 +3,8 @@ import { fileURLToPath, URL } from 'node:url';
 import react from '@vitejs/plugin-react';
 import { defineConfig, loadEnv, type Plugin } from 'vite';
 
-/**
- * Content-Security-Policy для production-сборки. Токен инстанса хранится в браузере,
- * поэтому запрещаем любые сторонние скрипты и соединения, кроме API GREEN-API.
- * В dev-режиме не добавляется: Vite использует inline-скрипты для HMR.
- */
+// Build only: the dev server relies on inline scripts for HMR.
+// frame-ancestors is ignored in <meta>, so it has to be sent as a response header.
 function csp(apiOverride?: string): Plugin {
   const connect = ["'self'", 'https://*.api.green-api.com'];
   if (apiOverride) connect.push(new URL(apiOverride).origin);
@@ -21,7 +18,6 @@ function csp(apiOverride?: string): Plugin {
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
-    // frame-ancestors в <meta> игнорируется — задавайте его HTTP-заголовком на сервере.
   ].join('; ');
   return {
     name: 'green-chat:csp',

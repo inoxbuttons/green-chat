@@ -17,8 +17,6 @@ interface AddContactDialogProps {
 
 export function AddContactDialog({ open, onClose }: AddContactDialogProps) {
   const [busy, setBusy] = useState(false);
-  // Новый key при каждом открытии сбрасывает форму; при закрытии содержимое
-  // остаётся на месте, чтобы не «схлопываться» во время анимации.
   const [formKey, setFormKey] = useState(open ? 1 : 0);
   const [prevOpen, setPrevOpen] = useState(open);
   if (open !== prevOpen) {
@@ -84,8 +82,6 @@ function AddContactForm({ onDone, onBusyChange }: FormProps) {
       openChat(result.chatId, apiPhone);
     } catch (err) {
       if (isGreenApiError(err) && err.kind === 'instance') {
-        // Проверить номер нельзя, пока Telegram не авторизован. Создаём чат по номеру:
-        // sendMessage принимает chatId вида «79991234567@c.us», сообщения встанут в очередь.
         openChat(phoneChatId(apiPhone), apiPhone);
         toast.info(
           'Номер не проверен: Telegram не авторизован. Сообщения уйдут после авторизации.',

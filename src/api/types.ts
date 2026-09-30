@@ -29,7 +29,6 @@ export interface CheckAccountResult {
   username?: string;
 }
 
-/** Статусы из уведомления outgoingMessageStatus. */
 export type OutgoingStatus =
   'sent' | 'delivered' | 'read' | 'failed' | 'noAccount' | 'notInGroup' | 'yellowCard' | 'expired';
 
@@ -70,7 +69,6 @@ export interface StateWebhook {
   stateInstance: InstanceState;
 }
 
-/** Тело уведомления. Неизвестные типы тоже возможны — их просто подтверждаем. */
 export type WebhookBody =
   MessageWebhook | StatusWebhook | StateWebhook | { typeWebhook: string; timestamp?: number };
 

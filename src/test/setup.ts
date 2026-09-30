@@ -8,7 +8,7 @@ afterEach(() => {
   sessionStorage.clear();
 });
 
-// jsdom не реализует <dialog>.showModal() и Popover API.
+// jsdom implements neither <dialog> modality nor the Popover API.
 if (!HTMLDialogElement.prototype.showModal) {
   HTMLDialogElement.prototype.showModal = function showModal(this: HTMLDialogElement) {
     this.setAttribute('open', '');

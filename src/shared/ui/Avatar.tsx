@@ -21,7 +21,6 @@ function hash(str: string): number {
 
 interface AvatarProps {
   name: string;
-  /** Стабильный ключ для выбора цвета (chatId). */
   seed: string;
   size?: number;
   className?: string;

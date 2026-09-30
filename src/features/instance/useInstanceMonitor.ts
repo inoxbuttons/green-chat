@@ -6,10 +6,6 @@ import { useInstanceStore } from './store';
 const AUTHORIZED_INTERVAL_MS = 5 * 60_000;
 const NOT_READY_INTERVAL_MS = 30_000;
 
-/**
- * Следит за состоянием инстанса: при входе, по таймеру (чаще, пока инстанс
- * не авторизован), при возврате на вкладку и восстановлении сети.
- */
 export function useInstanceMonitor(): void {
   const client = useSessionStore((s) => s.client);
 

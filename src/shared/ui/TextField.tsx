@@ -3,11 +3,9 @@ import { cx } from '@/shared/lib/cx';
 import s from './TextField.module.css';
 
 export interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
-  /** Подпись поля. Визуально показывается как placeholder, как на макете. */
   label: string;
   error?: string;
   hint?: string;
-  /** Показывать счётчик «0/60» (нужен maxLength). */
   counter?: boolean;
   endAdornment?: ReactNode;
   ref?: Ref<HTMLInputElement>;

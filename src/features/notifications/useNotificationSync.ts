@@ -12,15 +12,10 @@ type SyncMessage = { kind: 'event'; event: ChatEvent } | { kind: 'state'; state:
 
 let channel: BroadcastChannel | null = null;
 
-/** Рассылает локальное событие (например, созданный чат) другим вкладкам. */
 export function broadcastEvent(event: ChatEvent): void {
   channel?.postMessage({ kind: 'event', event } satisfies SyncMessage);
 }
 
-/**
- * Запускает получение уведомлений для текущей сессии:
- * одна вкладка-лидер опрашивает API и транслирует события остальным.
- */
 export function useNotificationSync(): void {
   const client = useSessionStore((s) => s.client);
 

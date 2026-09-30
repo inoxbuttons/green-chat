@@ -19,7 +19,6 @@ export const formatTime = (ts: number) => timeFmt.format(ts);
 
 export const isSameDay = (a: number, b: number) => startOfDay(a) === startOfDay(b);
 
-/** «Сегодня», «Вчера», «12 сентября», «12 сентября 2025 г.» */
 export function formatDayLabel(ts: number, now = Date.now()): string {
   const diffDays = Math.round((startOfDay(now) - startOfDay(ts)) / DAY_MS);
   if (diffDays === 0) return 'Сегодня';
@@ -29,7 +28,6 @@ export function formatDayLabel(ts: number, now = Date.now()): string {
     : dayYearFmt.format(ts);
 }
 
-/** Время в списке чатов: сегодня — часы, на неделе — день недели, иначе дата. */
 export function formatListTime(ts: number, now = Date.now()): string {
   const diffDays = Math.round((startOfDay(now) - startOfDay(ts)) / DAY_MS);
   if (diffDays === 0) return formatTime(ts);

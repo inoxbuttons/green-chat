@@ -14,8 +14,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    // Точка подключения мониторинга ошибок (Sentry и т. п.).
-    console.error('[app] необработанная ошибка', error, info.componentStack);
+    console.error('Unhandled render error', error, info.componentStack);
   }
 
   render() {

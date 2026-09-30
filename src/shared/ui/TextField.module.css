@@ -66,7 +66,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Зазор между полями на макете — место под сообщение об ошибке. */
 .message {
   min-height: 32px;
   padding: 6px 14px 0;

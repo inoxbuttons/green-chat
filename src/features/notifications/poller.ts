@@ -6,30 +6,18 @@ import { parseNotification } from './parse';
 export interface PollerHandlers {
   onEvent: (event: ChatEvent) => void;
   onInstanceState?: (state: InstanceState) => void;
-  /** Неустранимая ошибка (неверный токен) — опрос прекращается. */
   onFatal?: (error: unknown) => void;
   onHealthChange?: (healthy: boolean) => void;
 }
 
 const MAX_BACKOFF_MS = 30_000;
 
-/**
- * Пока инстанс не авторизован, сервер отвечает на receiveNotification сразу,
- * не удерживая соединение. Без паузы long polling превратился бы в частый опрос.
- */
+// An unauthorized instance returns immediately instead of holding the long poll.
 export const MIN_EMPTY_POLL_INTERVAL_MS = 5_000;
 
 export const backoffDelay = (failures: number) =>
   Math.min(MAX_BACKOFF_MS, 1000 * 2 ** Math.max(0, failures - 1));
 
-/**
- * Цикл получения уведомлений по HTTP API:
- * receiveNotification (long polling) → обработка → deleteNotification.
- *
- * Очередь GREEN-API — FIFO: пока уведомление не удалено, receiveNotification
- * возвращает его снова. Поэтому удаляем каждое уведомление, в том числе
- * нетекстовые и те, на которых упал обработчик, — иначе очередь встанет.
- */
 export async function runNotificationLoop(
   client: GreenApiClient,
   handlers: PollerHandlers,
@@ -82,14 +70,14 @@ export async function runNotificationLoop(
         if (event) handlers.onEvent(event);
       }
     } catch (e) {
-      console.error('[notifications] ошибка обработки уведомления', notification.receiptId, e);
+      console.error('Failed to handle notification', notification.receiptId, e);
     }
 
+    // Always ack: the queue is FIFO, so an unacked notification blocks everything after it.
     try {
       await client.deleteNotification(notification.receiptId, signal);
     } catch (e) {
       if (signal.aborted) break;
-      // Не удалось удалить — уведомление придёт повторно, дубли отсекаются по idMessage.
       await fail(e);
     }
   }

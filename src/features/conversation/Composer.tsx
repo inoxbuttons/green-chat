@@ -6,7 +6,6 @@ import s from './Composer.module.css';
 
 interface ComposerProps {
   onSend: (text: string) => void;
-  /** Для сброса черновика и фокуса при смене чата. */
   chatId: string;
 }
 
@@ -18,7 +17,6 @@ export function Composer({ onSend, chatId }: ComposerProps) {
   const ref = useRef<HTMLTextAreaElement>(null);
   const canSend = text.trim().length > 0;
 
-  // Черновик — на каждый чат свой (сбрасывается при смене чата), фокус — в поле ввода.
   const [prevChat, setPrevChat] = useState(chatId);
   if (prevChat !== chatId) {
     setPrevChat(chatId);
@@ -28,7 +26,6 @@ export function Composer({ onSend, chatId }: ComposerProps) {
     ref.current?.focus({ preventScroll: true });
   }, [chatId]);
 
-  // Авто-высота textarea по содержимому.
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -44,7 +41,6 @@ export function Composer({ onSend, chatId }: ComposerProps) {
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    // Enter — отправить, Shift+Enter — перенос строки. Не мешаем IME-вводу.
     if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault();
       submit();

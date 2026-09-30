@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type ClipboardEvent, type FormEvent } from 'react';
 import { GreenApiClient, describeError, isGreenApiError } from '@/api';
 import { attachChatsStorage } from '@/features/chats/store';
 import { useInstanceStore } from '@/features/instance/store';
@@ -7,6 +7,16 @@ import { useSessionStore } from './session';
 import s from './LoginPage.module.css';
 
 const NAME_MAX = 60;
+
+const replaceOnPaste =
+  (apply: (value: string) => void) => (e: ClipboardEvent<HTMLInputElement>) => {
+    const pasted = e.clipboardData.getData('text');
+    const input = e.currentTarget;
+    const wholeSelected = input.selectionStart === 0 && input.selectionEnd === input.value.length;
+    if (!pasted || wholeSelected || input.value === '') return;
+    e.preventDefault();
+    apply(pasted);
+  };
 
 interface FormErrors {
   userName?: string;
@@ -64,9 +74,9 @@ export function LoginPage() {
       let message = describeError(err);
       if (isGreenApiError(err)) {
         if (err.kind === 'auth' || err.status === 404) {
-          message = 'Неверный idInstance или apiTokenInstance.';
+          message =
+            'Неверный idInstance или apiTokenInstance. Проверьте токен кнопкой «глаз»: браузер мог подставить в поле сохранённый пароль.';
         } else if (err.kind === 'network' && navigator.onLine) {
-          // Хост API определяется по idInstance: несуществующий инстанс даёт сетевую ошибку.
           message = 'Не удалось подключиться к API инстанса. Проверьте idInstance.';
         }
       }
@@ -102,8 +112,11 @@ export function LoginPage() {
           label="idInstance"
           value={idInstance}
           onChange={(e) => setIdInstance(e.target.value.replace(/\D/g, ''))}
+          onPaste={replaceOnPaste((v) => setIdInstance(v.replace(/\D/g, '')))}
           inputMode="numeric"
-          autoComplete="username"
+          autoComplete="off"
+          data-1p-ignore
+          data-lpignore="true"
           spellCheck={false}
           error={errors.idInstance}
           disabled={loading}
@@ -113,7 +126,11 @@ export function LoginPage() {
           type={showToken ? 'text' : 'password'}
           value={token}
           onChange={(e) => setToken(e.target.value.trim())}
-          autoComplete="current-password"
+          onPaste={replaceOnPaste((v) => setToken(v.trim()))}
+          // Stops the browser from filling in a saved password from another app on the same host.
+          autoComplete="new-password"
+          data-1p-ignore
+          data-lpignore="true"
           spellCheck={false}
           error={errors.apiTokenInstance}
           disabled={loading}

@@ -39,7 +39,6 @@
   background: var(--c-hover);
 }
 
-/* Синяя кнопка «+» из макета — скруглённый квадрат, а не круг. */
 .accent {
   border-radius: 12px;
   background: var(--c-accent);

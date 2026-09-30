@@ -21,7 +21,6 @@ import s from './Messenger.module.css';
 
 const APP_TITLE = 'Green Chat';
 
-/** Авторизованная часть: подключает хранилище инстанса, опрос уведомлений и мониторинг. */
 export function Messenger() {
   const idInstance = useSessionStore((st) => st.session!.idInstance);
   const [ready, setReady] = useState(() => isChatsStorageAttached(idInstance));

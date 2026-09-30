@@ -12,13 +12,11 @@ import s from './PhoneField.module.css';
 import fieldStyles from './TextField.module.css';
 import { usePopover } from './usePopover';
 
-/** Как на макете: цифры группами через пробел («912 345 67 89»). */
 const displayNational = (digits: string, country: CountryCode) =>
   formatNational(digits, country).replace(/-/g, ' ');
 
 export interface PhoneValue {
   country: CountryCode;
-  /** Только цифры национального номера. */
   national: string;
 }
 
@@ -76,9 +74,8 @@ export function PhoneField({
           onChange={(e) => {
             const raw = e.target.value;
             const next = parseInput(raw, value.country);
-            // Удалили разделитель («-», пробел) — цифры не изменились. Удаляем цифру,
-            // иначе форматирование вернёт символ обратно и Backspace «залипнет».
             const formatted = displayNational(value.national, value.country);
+            // Backspace over a separator: drop a digit, otherwise formatting puts it right back.
             if (next.national === value.national && raw.length < formatted.length) {
               next.national = value.national.slice(0, -1);
             }

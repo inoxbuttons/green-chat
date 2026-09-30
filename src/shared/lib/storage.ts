@@ -1,7 +1,3 @@
-/**
- * Обёртка над Web Storage: хранилище может быть недоступно (приватный режим,
- * запрет cookies) или переполнено — приложение не должно из-за этого падать.
- */
 export type StorageKind = 'local' | 'session';
 
 function get(kind: StorageKind): Storage | null {
@@ -25,7 +21,7 @@ export const safeStorage = {
       get(kind)?.setItem(key, value);
       return true;
     } catch (e) {
-      console.warn(`[storage] не удалось сохранить ${key}`, e);
+      console.warn(`Failed to persist ${key}`, e);
       return false;
     }
   },

@@ -38,7 +38,6 @@ export function asCheckAccount(v: unknown): CheckAccountResult | null {
   };
 }
 
-/** null — валидный ответ «уведомлений нет». */
 export function asNotification(v: unknown): Notification | null | undefined {
   if (v === null) return null;
   if (

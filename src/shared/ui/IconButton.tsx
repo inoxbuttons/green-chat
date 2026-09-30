@@ -3,7 +3,6 @@ import { cx } from '@/shared/lib/cx';
 import s from './IconButton.module.css';
 
 export interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  /** Обязателен: у кнопки-иконки нет видимого текста. */
   'aria-label': string;
   size?: 32 | 40;
   variant?: 'ghost' | 'accent';

@@ -112,7 +112,6 @@ describe('runNotificationLoop', () => {
       },
       () => 1_000,
     );
-    // После пустого ответа — пауза; после ответа с уведомлением — сразу следующий запрос.
     expect(sleeps[0]).toBe(MIN_EMPTY_POLL_INTERVAL_MS);
   });
 

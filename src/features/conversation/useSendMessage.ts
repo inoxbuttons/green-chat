@@ -3,7 +3,6 @@ import { describeError } from '@/api';
 import { useClient } from '@/features/auth/session';
 import { useChatsStore } from '@/features/chats/store';
 
-/** Telegram ограничивает текстовое сообщение 4096 символами. */
 export const MESSAGE_MAX_LENGTH = 4096;
 
 export function useSendMessage() {
@@ -34,10 +33,6 @@ export function useSendMessage() {
     [deliver],
   );
 
-  /**
-   * Повтор — только по действию пользователя: sendMessage не идемпотентен,
-   * автоматический повтор после обрыва мог бы продублировать сообщение.
-   */
   const retry = useCallback(
     (chatId: string, id: string) => {
       const msg = useChatsStore.getState().messages[chatId]?.find((m) => m.id === id);

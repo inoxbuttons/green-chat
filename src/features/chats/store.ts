@@ -10,7 +10,6 @@ import {
   type MessageStatus,
 } from './model';
 
-/** Ограничиваем историю, чтобы не упереться в квоту localStorage. */
 export const MAX_MESSAGES_PER_CHAT = 500;
 
 interface ChatsData {
@@ -22,7 +21,6 @@ interface ChatsData {
 interface ChatsActions {
   upsertChat: (chat: Pick<Chat, 'chatId' | 'name' | 'phone'>) => void;
   openChat: (chatId: string | null) => void;
-  /** Оптимистично добавляет исходящее сообщение, возвращает его локальный id. */
   addOutgoing: (chatId: string, text: string) => string;
   setSending: (chatId: string, id: string) => void;
   markQueued: (chatId: string, localId: string, idMessage: string) => void;
@@ -41,7 +39,6 @@ const storageKey = (idInstance: string) => `green-chat:data:${idInstance}`;
 let localSeq = 0;
 const newLocalId = () => `local:${Date.now().toString(36)}:${(localSeq++).toString(36)}`;
 
-/** Вставка с сохранением сортировки по времени (почти всегда — в конец). */
 function insertSorted(list: Message[], msg: Message): Message[] {
   let i = list.length;
   while (i > 0 && list[i - 1]!.timestamp > msg.timestamp) i--;
@@ -129,8 +126,7 @@ export const useChatsStore = create<ChatsState>()(
         set((s) => {
           const current = s.messages[chatId];
           if (!current) return s;
-          // Уведомление о сообщении могло прийти раньше ответа sendMessage —
-          // тогда локальная копия лишняя.
+          // The webhook can arrive before the sendMessage response.
           const duplicate = current.some((m) => m.id === idMessage);
           const list = updateMessage(current, localId, (m) =>
             duplicate ? null : { ...m, id: idMessage, status: 'queued' },
@@ -171,15 +167,12 @@ export const useChatsStore = create<ChatsState>()(
     {
       name: 'green-chat:data',
       version: 1,
-      // Хранилище подключается после входа (ключ зависит от idInstance).
       skipHydration: true,
       storage: createJSONStorage(() => ({
         getItem: (k) => safeStorage.read('local', k),
         setItem: (k, v) => void safeStorage.write('local', k, v),
         removeItem: (k) => safeStorage.remove('local', k),
       })),
-      // Данные другого инстанса в памяти не должны «подмешаться»: при гидрации
-      // берём только сохранённое (или пустое) состояние, не записывая ничего в хранилище.
       merge: (persisted, current) => ({
         ...current,
         ...initialData(),
@@ -187,7 +180,6 @@ export const useChatsStore = create<ChatsState>()(
       }),
       partialize: ({ chats, messages, activeChatId }) => ({
         chats,
-        // Незавершённые отправки не переживают перезагрузку: результат неизвестен.
         messages: Object.fromEntries(
           Object.entries(messages).map(([id, list]) => [
             id,
@@ -211,10 +203,6 @@ export function isChatsStorageAttached(idInstance: string): boolean {
   );
 }
 
-/**
- * Подключает стор к хранилищу конкретного инстанса и загружает сохранённые данные.
- * Идемпотентна: повторный вызов (StrictMode, повторный рендер) ничего не перезаписывает.
- */
 export async function attachChatsStorage(idInstance: string): Promise<void> {
   if (isChatsStorageAttached(idInstance)) return;
   useChatsStore.persist.setOptions({ name: storageKey(idInstance) });
@@ -227,16 +215,12 @@ export function clearChatsStorage(idInstance: string): void {
   safeStorage.remove('local', storageKey(idInstance));
 }
 
-// ─── Reducers ─────────────────────────────────────────────────────────────────
-
 function applyStatus(
   s: ChatsData,
   chatId: string,
   id: string,
   status: MessageStatus,
 ): Partial<ChatsData> | ChatsData {
-  // chatId в статусе может не совпадать с ключом чата (номерной chatId → числовой),
-  // поэтому при промахе ищем сообщение по всем чатам.
   const candidates = s.messages[chatId]
     ? [chatId, ...Object.keys(s.messages)]
     : Object.keys(s.messages);
@@ -258,8 +242,7 @@ function applyMessage(
 ): Partial<ChatsData> | ChatsData {
   let { chats, messages, activeChatId } = s;
 
-  // Чат, созданный по номеру до проверки аккаунта (chatId «7999…@c.us»), переносим
-  // на настоящий chatId Telegram, как только от собеседника приходит сообщение.
+  // A chat opened by phone before checkAccount was available moves to the real chatId on first reply.
   if (!chats[e.chatId] && e.phone) {
     const legacy = Object.values(chats).find((c) => isPhoneChatId(c.chatId) && c.phone === e.phone);
     if (legacy) {
@@ -309,8 +292,6 @@ function applyMessage(
     activeChatId,
   };
 }
-
-// ─── Selectors ────────────────────────────────────────────────────────────────
 
 const EMPTY: Message[] = [];
 

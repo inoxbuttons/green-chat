@@ -7,11 +7,8 @@ import s from './MessageBubble.module.css';
 
 interface MessageBubbleProps {
   message: Message;
-  /** Первое сообщение в серии от одного отправителя — больший отступ сверху. */
   first: boolean;
-  /** Анимировать появление (только новые сообщения, не всю историю). */
   animate: boolean;
-  /** Инстанс авторизован: «в очереди» можно показывать как «отправлено». */
   instanceReady: boolean;
   onRetry: (id: string) => void;
   onDelete: (id: string) => void;

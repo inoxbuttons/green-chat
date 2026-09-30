@@ -1,20 +1,5 @@
 export type GreenApiErrorKind =
-  /** 401/403 — неверные idInstance / apiTokenInstance. */
-  | 'auth'
-  /** 429 — превышен лимит запросов. */
-  | 'rateLimit'
-  /** Нет сети / CORS / DNS. */
-  | 'network'
-  /** Запрос не уложился в таймаут. */
-  | 'timeout'
-  /** Запрос отменён вызывающим кодом. */
-  | 'aborted'
-  /** Инстанс не готов к работе (например, Telegram не авторизован). */
-  | 'instance'
-  /** 5xx и прочие неожиданные HTTP-статусы. */
-  | 'server'
-  /** Ответ пришёл, но не соответствует ожидаемому формату. */
-  | 'badResponse';
+  'auth' | 'rateLimit' | 'network' | 'timeout' | 'aborted' | 'instance' | 'server' | 'badResponse';
 
 export class GreenApiError extends Error {
   readonly kind: GreenApiErrorKind;
@@ -33,7 +18,6 @@ export class GreenApiError extends Error {
     this.retryAfterMs = options.retryAfterMs;
   }
 
-  /** Имеет ли смысл повторять идемпотентный запрос. */
   get isRetryable(): boolean {
     return (
       this.kind === 'network' ||
@@ -46,7 +30,6 @@ export class GreenApiError extends Error {
 
 export const isGreenApiError = (e: unknown): e is GreenApiError => e instanceof GreenApiError;
 
-/** Человекочитаемое описание ошибки для UI. Никогда не содержит токен. */
 export function describeError(e: unknown): string {
   if (!isGreenApiError(e)) return 'Неизвестная ошибка. Попробуйте ещё раз.';
   switch (e.kind) {

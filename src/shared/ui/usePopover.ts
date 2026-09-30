@@ -5,10 +5,6 @@ export type Placement = 'bottom-start' | 'bottom-end' | 'right' | 'top-start';
 const GAP = 6;
 const VIEWPORT_PADDING = 8;
 
-/**
- * Позиционирует элемент с атрибутом `popover` относительно якоря.
- * Top layer, закрытие по клику снаружи и Esc — нативные (Popover API).
- */
 export function computePosition(
   anchor: DOMRect,
   pop: { width: number; height: number },
@@ -35,7 +31,6 @@ export function computePosition(
       top = anchor.bottom + GAP;
       left = anchor.left;
   }
-  // Не помещается снизу — переворачиваем вверх.
   if (placement.startsWith('bottom') && top + pop.height > viewport.height - VIEWPORT_PADDING) {
     const flipped = anchor.top - GAP - pop.height;
     if (flipped >= VIEWPORT_PADDING) top = flipped;
@@ -90,7 +85,6 @@ export function usePopover<A extends HTMLElement = HTMLButtonElement>({
       setOpen(isOpen);
       onOpenChangeRef.current?.(isOpen);
     };
-    // beforetoggle: ставим позицию до первой отрисовки, чтобы не было «прыжка».
     const onBeforeToggle = (e: Event) => {
       if ((e as ToggleEvent).newState === 'open') requestAnimationFrame(position);
     };
@@ -102,7 +96,6 @@ export function usePopover<A extends HTMLElement = HTMLButtonElement>({
     };
   }, [position]);
 
-  // При ресайзе окна закрываем: позиция якоря могла измениться.
   useEffect(() => {
     if (!open) return;
     const close = () => popoverRef.current?.hidePopover();

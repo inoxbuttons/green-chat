@@ -21,28 +21,24 @@ const DEFAULT_TIMEOUT_MS = 15_000;
 const MAX_RETRIES = 2;
 const BASE_BACKOFF_MS = 500;
 
-/** Долгий опрос: сервер держит соединение до receiveTimeout секунд (5–60). */
 export const RECEIVE_TIMEOUT_S = 25;
 
 export function resolveApiUrl(idInstance: string): string {
   const override = import.meta.env.VITE_GREEN_API_URL as string | undefined;
   if (override) return override.replace(/\/+$/, '');
-  // Хост инстанса определяется первыми четырьмя цифрами idInstance.
+  // The instance host is derived from the first 4 digits of idInstance.
   return `https://${idInstance.slice(0, 4)}.api.green-api.com`;
 }
 
 interface RequestOptions<T> {
   method?: 'GET' | 'POST' | 'DELETE';
-  /** Часть пути после токена, например `/12345` для deleteNotification. */
   suffix?: string;
   query?: Record<string, string | number>;
   body?: unknown;
   signal?: AbortSignal;
   timeoutMs?: number;
-  /** Разрешены ли автоматические повторы. Только для идемпотентных вызовов. */
   retry?: boolean;
   parse: (json: unknown) => T | undefined | null;
-  /** Когда `null` — допустимый результат (receiveNotification без уведомлений). */
   allowNull?: boolean;
 }
 
@@ -67,8 +63,6 @@ export class GreenApiClient {
     this.#sleep = options.sleep ?? abortableSleep;
   }
 
-  // ─── Account ────────────────────────────────────────────────────────────────
-
   getStateInstance(signal?: AbortSignal): Promise<InstanceState> {
     return this.#request('getStateInstance', { signal, retry: true, parse: asStateInstance });
   }
@@ -85,12 +79,9 @@ export class GreenApiClient {
       retry: true,
       parse: (j) => asResultFlag(j, 'saveSettings'),
     });
-    if (!ok) throw new GreenApiError('server', 'Настройки не сохранены');
+    if (!ok) throw new GreenApiError('server', 'setSettings: not saved');
   }
 
-  // ─── Service ────────────────────────────────────────────────────────────────
-
-  /** Проверяет наличие Telegram у номера и возвращает chatId собеседника. */
   checkAccount(phoneNumber: string, signal?: AbortSignal): Promise<CheckAccountResult> {
     return this.#request('checkAccount', {
       method: 'POST',
@@ -101,31 +92,23 @@ export class GreenApiClient {
     });
   }
 
-  // ─── Sending ────────────────────────────────────────────────────────────────
-
-  /**
-   * Ставит сообщение в очередь отправки GREEN-API и возвращает idMessage.
-   * Намеренно без автоповторов: при обрыве соединения сообщение могло уже
-   * попасть в очередь, повтор создал бы дубль.
-   */
   sendMessage(params: SendMessageParams, signal?: AbortSignal): Promise<string> {
     return this.#request('sendMessage', {
       method: 'POST',
       body: params,
       signal,
+      // A timed-out request may already be queued on the server; retrying would duplicate it.
       retry: false,
       parse: asIdMessage,
     });
   }
-
-  // ─── Receiving (HTTP API) ───────────────────────────────────────────────────
 
   receiveNotification(signal?: AbortSignal): Promise<Notification | null> {
     return this.#request('receiveNotification', {
       query: { receiveTimeout: RECEIVE_TIMEOUT_S },
       timeoutMs: (RECEIVE_TIMEOUT_S + 10) * 1000,
       signal,
-      retry: false, // повторы делает цикл опроса
+      retry: false,
       parse: asNotification,
       allowNull: true,
     });
@@ -140,8 +123,6 @@ export class GreenApiClient {
       parse: (j) => asResultFlag(j, 'result'),
     });
   }
-
-  // ─── Transport ──────────────────────────────────────────────────────────────
 
   #buildUrl(method: string, suffix = '', query?: Record<string, string | number>): string {
     const url = new URL(
@@ -223,7 +204,7 @@ const NOT_READY_RE = /not authorized|instance is starting/i;
 
 function httpError(apiMethod: string, response: Response, body: string): GreenApiError {
   const { status } = response;
-  // Неавторизованный инстанс: HTTP 400 с текстом «instance is starting or not authorized».
+  // Unauthorized instances answer 400 with a plain-text body.
   if (status === 400 && NOT_READY_RE.test(body)) {
     return new GreenApiError('instance', `${apiMethod}: instance not ready`, { status });
   }
@@ -239,17 +220,12 @@ function httpError(apiMethod: string, response: Response, body: string): GreenAp
   return new GreenApiError('server', `${apiMethod}: HTTP ${status}`, { status });
 }
 
-/**
- * Часть методов отвечает HTTP 200 с телом `{ status: false, ... }`,
- * например когда инстанс не авторизован или превышен лимит.
- */
 function rejectFailureEnvelope(apiMethod: string, json: unknown): void {
   if (!isRecord(json) || json.status !== false) return;
   const data = isRecord(json.data) ? json.data : undefined;
   if (data?.reason === 'rate_limit_exceeded') {
     const retryAfter = typeof data.retryAfter === 'number' ? data.retryAfter : undefined;
     throw new GreenApiError('rateLimit', `${apiMethod}: rate limited`, {
-      // retryAfter приходит в миллисекундах; ограничиваем, чтобы не зависнуть надолго.
       retryAfterMs: retryAfter !== undefined ? Math.min(retryAfter, 60_000) : undefined,
     });
   }

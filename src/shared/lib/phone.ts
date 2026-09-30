@@ -45,15 +45,10 @@ export function getCountry(code: CountryCode): Country {
 
 export const onlyDigits = (s: string) => s.replace(/\D/g, '');
 
-/** Форматирует национальную часть номера по мере ввода: «912 345-67-89». */
 export function formatNational(digits: string, country: CountryCode): string {
   return new AsYouType(country).input(digits);
 }
 
-/**
- * Разбирает ввод целиком. Если пользователь вставил номер с «+», страна
- * определяется автоматически.
- */
 export function parseInput(
   raw: string,
   country: CountryCode,
@@ -66,21 +61,18 @@ export function parseInput(
     }
   }
   const digits = onlyDigits(trimmed);
-  // «8 912…» для России — привычная запись, отрезаем префикс.
   if (country === 'RU' && digits.length === 11 && /^[78]/.test(digits)) {
     return { country, national: digits.slice(1) };
   }
   return { country, national: digits };
 }
 
-/** Номер в формате E.164 без «+» (как ожидает GREEN-API) или null, если невалиден. */
 export function toApiPhone(national: string, country: CountryCode): string | null {
   const parsed = parsePhoneNumberFromString(national, country);
   if (!parsed?.isValid()) return null;
   return parsed.number.slice(1);
 }
 
-/** «+7 912 345 67 89» для отображения. */
 export function formatInternational(digits: string): string {
   const parsed = parsePhoneNumberFromString(`+${digits}`);
   return parsed ? parsed.formatInternational() : `+${digits}`;

@@ -30,10 +30,6 @@ function extractText(data: MessageWebhook['messageData']): string | null {
   }
 }
 
-/**
- * Преобразует уведомление GREEN-API в событие домена.
- * Возвращает null для типов, которые интерфейс не отображает.
- */
 export function parseNotification(body: WebhookBody): ChatEvent | null {
   if (MESSAGE_WEBHOOKS.has(body.typeWebhook)) {
     const m = body as MessageWebhook;

@@ -4,7 +4,6 @@ import type { InstanceSettings, InstanceState } from '@/api';
 interface InstanceStoreState {
   state: InstanceState | null;
   settings: InstanceSettings | null;
-  /** false — цикл опроса уведомлений несколько раз подряд не смог связаться с API. */
   receiving: boolean;
   setState: (state: InstanceState) => void;
   setSettings: (settings: InstanceSettings) => void;
@@ -22,7 +21,6 @@ export const useInstanceStore = create<InstanceStoreState>((set) => ({
   reset: () => set({ state: null, settings: null, receiving: true }),
 }));
 
-/** Настройки, без которых интерфейс не увидит входящие и статусы доставки. */
 export const REQUIRED_NOTIFICATION_SETTINGS = {
   incomingWebhook: 'yes',
   outgoingWebhook: 'yes',

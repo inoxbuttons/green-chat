@@ -7,7 +7,6 @@ export interface Session {
   idInstance: string;
   apiTokenInstance: string;
   userName: string;
-  /** true — localStorage (переживает закрытие браузера), false — sessionStorage. */
   remember: boolean;
 }
 
@@ -23,16 +22,20 @@ function isSession(v: unknown): v is Session {
   );
 }
 
+function parseJson(raw: string): unknown {
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
 function loadSession(): Session | null {
   for (const kind of ['session', 'local'] as const) {
     const raw = safeStorage.read(kind, KEY);
     if (!raw) continue;
-    try {
-      const parsed: unknown = JSON.parse(raw);
-      if (isSession(parsed)) return parsed;
-    } catch {
-      /* повреждённые данные — игнорируем */
-    }
+    const parsed = parseJson(raw);
+    if (isSession(parsed)) return parsed;
     safeStorage.remove(kind, KEY);
   }
   return null;
@@ -70,9 +73,8 @@ export const useSessionStore = create<SessionState>((set) => ({
   },
 }));
 
-/** Клиент API текущей сессии. Используется только внутри авторизованной части приложения. */
 export function useClient(): GreenApiClient {
   const client = useSessionStore((s) => s.client);
-  if (!client) throw new Error('useClient() вызван без активной сессии');
+  if (!client) throw new Error('useClient() called without an active session');
   return client;
 }

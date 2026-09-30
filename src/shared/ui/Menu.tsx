@@ -26,7 +26,6 @@ interface MenuProps {
 
 const ITEM_SELECTOR = '[role="menuitem"]:not(:disabled)';
 
-/** Выпадающее меню: Popover API + WAI-ARIA menu pattern (стрелки, Home/End, Esc). */
 export function Menu({ trigger, children, placement, className, ...aria }: MenuProps) {
   const { id, open, anchorRef, popoverProps } = usePopover({
     placement,
@@ -83,7 +82,6 @@ export function Menu({ trigger, children, placement, className, ...aria }: MenuP
         className={cx(s.menu, className)}
         onKeyDown={onKeyDown}
         onClick={(e) => {
-          // Выбор пункта закрывает меню.
           if ((e.target as HTMLElement).closest(ITEM_SELECTOR)) e.currentTarget.hidePopover();
         }}
       >

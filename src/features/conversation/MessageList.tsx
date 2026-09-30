@@ -14,7 +14,6 @@ interface MessageListProps {
   onDelete: (id: string) => void;
 }
 
-/** Насколько близко к низу считается «внизу» — тогда новые сообщения прокручиваются автоматически. */
 const STICK_THRESHOLD_PX = 120;
 
 export function MessageList({
@@ -26,7 +25,7 @@ export function MessageList({
 }: MessageListProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const atBottomRef = useRef(true);
-  const prevCountRef = useRef(0);
+  const prevLastKeyRef = useRef<string | undefined>(undefined);
   const prevChatRef = useRef<string | null>(null);
   const [showScrollDown, setShowScrollDown] = useState(false);
   const [mountedAt] = useState(() => Date.now());
@@ -38,16 +37,15 @@ export function MessageList({
 
   useLayoutEffect(() => {
     const chatChanged = prevChatRef.current !== chatId;
-    const added = messages.length > prevCountRef.current;
     const last = messages.at(-1);
+    const added = last !== undefined && last.key !== prevLastKeyRef.current;
     prevChatRef.current = chatId;
-    prevCountRef.current = messages.length;
+    prevLastKeyRef.current = last?.key;
 
     if (chatChanged) {
       scrollToBottom();
       atBottomRef.current = true;
     } else if (added && (atBottomRef.current || last?.direction === 'out')) {
-      // Своё сообщение прокручиваем всегда, чужое — только если пользователь внизу.
       scrollToBottom('smooth');
     }
   }, [chatId, messages, scrollToBottom]);

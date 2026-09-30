@@ -7,16 +7,11 @@ interface ModalProps {
   onClose: () => void;
   title: ReactNode;
   children: ReactNode;
-  /** Запретить закрытие (например, пока идёт запрос). */
   dismissible?: boolean;
   size?: 's' | 'm';
   className?: string;
 }
 
-/**
- * Модальное окно на нативном <dialog>: top layer, фокус-ловушка, Esc
- * и возврат фокуса обеспечивает браузер. Анимации — на CSS.
- */
 export function Modal({
   open,
   onClose,
@@ -35,8 +30,6 @@ export function Modal({
     if (!dialog) return;
     if (open && !dialog.open) {
       dialog.showModal();
-      // showModal() фокусирует первый фокусируемый элемент (например, выбор страны);
-      // нам нужно первое поле ввода или элемент, помеченный data-autofocus.
       const target =
         dialog.querySelector<HTMLElement>('[data-autofocus]') ??
         [
@@ -49,7 +42,6 @@ export function Modal({
     if (!open && dialog.open) dialog.close();
   }, [open]);
 
-  // Esc: браузер закрывает <dialog> сам — перехватываем, чтобы состояние оставалось у родителя.
   useEffect(() => {
     const dialog = ref.current;
     if (!dialog) return;
@@ -66,8 +58,7 @@ export function Modal({
       ref={ref}
       aria-labelledby={titleId}
       className={cx(s.dialog, s[size], className)}
-      // Клик по подложке: считаем, только если и нажатие, и отпускание были вне контента,
-      // иначе выделение текста с выходом за край закрывало бы окно.
+      // Close only if the press also started on the backdrop, so text-selection drags don't dismiss.
       onPointerDown={(e) => {
         pressStartedOnBackdrop.current = e.target === e.currentTarget;
       }}

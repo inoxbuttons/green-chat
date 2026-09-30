@@ -8,7 +8,6 @@ import { useChatsStore } from './store';
 import s from './ChatList.module.css';
 
 interface ChatListProps {
-  /** Компактный режим (только аватары) — когда открыт чат, как на макете. */
   compact: boolean;
 }
 

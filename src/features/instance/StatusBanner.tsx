@@ -3,10 +3,6 @@ import { BellOffIcon, Button, LinkOffIcon, Banner, Spinner } from '@/shared/ui';
 import { EnableNotificationsDialog } from './EnableNotificationsDialog';
 import { useInstanceStore } from './store';
 
-/**
- * Показывает самую важную проблему инстанса (одну за раз):
- * нет связи → Telegram не авторизован → выключены уведомления.
- */
 export function StatusBanner({ className }: { className?: string }) {
   const state = useInstanceStore((s) => s.state);
   const incoming = useInstanceStore((s) => s.settings?.incomingWebhook);
