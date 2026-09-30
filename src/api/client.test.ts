@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { GreenApiClient, resolveApiUrl } from './client';
 import { GreenApiError } from './errors';
 
-const creds = { idInstance: '410022751344', apiTokenInstance: 'secret-token' };
+const creds = { idInstance: '4100000001', apiTokenInstance: 'secret-token' };
 
 function setup(responses: Array<Response | Error>) {
   const fetchMock = vi.fn<typeof fetch>();
@@ -23,7 +23,7 @@ const json = (body: unknown, status = 200) =>
 
 describe('resolveApiUrl', () => {
   it('определяет хост по первым 4 цифрам idInstance', () => {
-    expect(resolveApiUrl('410022751344')).toBe('https://4100.api.green-api.com');
+    expect(resolveApiUrl('4100000001')).toBe('https://4100.api.green-api.com');
     expect(resolveApiUrl('7103000000')).toBe('https://7103.api.green-api.com');
   });
 });
@@ -33,7 +33,7 @@ describe('GreenApiClient', () => {
     const { client, fetchMock } = setup([json({ stateInstance: 'authorized' })]);
     await expect(client.getStateInstance()).resolves.toBe('authorized');
     expect(fetchMock.mock.calls[0]![0]).toBe(
-      'https://4100.api.green-api.com/waInstance410022751344/getStateInstance/secret-token',
+      'https://4100.api.green-api.com/waInstance4100000001/getStateInstance/secret-token',
     );
   });
 
