@@ -1,0 +1,76 @@
+.dialog {
+  width: calc(100% - 32px);
+  max-height: calc(100% - 32px);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-modal);
+  background: var(--c-surface);
+  color: var(--c-text);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 0.18);
+  overflow: auto;
+  overscroll-behavior: contain;
+
+  opacity: 0;
+  transform: translateY(8px) scale(0.97);
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease),
+    overlay var(--dur) allow-discrete,
+    display var(--dur) allow-discrete;
+}
+
+.dialog[open] {
+  opacity: 1;
+  transform: none;
+}
+
+@starting-style {
+  .dialog[open] {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+}
+
+.dialog::backdrop {
+  background: rgb(0 0 0 / 0);
+  transition:
+    background-color var(--dur) var(--ease),
+    overlay var(--dur) allow-discrete,
+    display var(--dur) allow-discrete;
+}
+
+.dialog[open]::backdrop {
+  background: var(--c-overlay);
+}
+
+@starting-style {
+  .dialog[open]::backdrop {
+    background: rgb(0 0 0 / 0);
+  }
+}
+
+.m {
+  max-width: 420px;
+}
+
+.s {
+  max-width: 380px;
+}
+
+.content {
+  padding: 24px;
+}
+
+.title {
+  margin: 4px 0 24px;
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.s .title {
+  margin-bottom: 12px;
+  font-size: 19px;
+  line-height: 24px;
+}

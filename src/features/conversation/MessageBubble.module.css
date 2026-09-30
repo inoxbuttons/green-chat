@@ -1,0 +1,118 @@
+.row {
+  display: flex;
+  flex-direction: column;
+  margin-top: 4px;
+}
+
+.first {
+  margin-top: 12px;
+}
+
+.out {
+  align-items: flex-end;
+}
+
+.in {
+  align-items: flex-start;
+}
+
+.bubble {
+  max-width: min(78%, 560px);
+  padding: 8px 12px 6px;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 1px 1px rgb(0 0 0 / 0.04);
+}
+
+.animate {
+  animation: bubble-in 160ms var(--ease);
+}
+
+.out .bubble {
+  background: var(--c-bubble-out);
+}
+
+.in .bubble {
+  background: var(--c-bubble-in);
+}
+
+.failed {
+  box-shadow: inset 0 0 0 1.5px rgb(229 72 77 / 0.5);
+}
+
+.text {
+  margin: 0;
+  font-size: 16px;
+  line-height: 22px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.unsupported {
+  font-style: italic;
+  color: var(--c-muted);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 16px;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+.out .meta {
+  color: var(--c-meta-out);
+}
+
+.in .meta {
+  color: var(--c-meta-in);
+}
+
+.queued {
+  display: inline-flex;
+}
+
+.read {
+  color: var(--c-accent);
+}
+
+.failedIcon {
+  color: var(--c-danger);
+}
+
+.failedActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px 12px;
+  margin-top: 4px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.85);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--c-danger);
+}
+
+.failedActions button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--c-accent);
+  font-weight: 600;
+}
+
+.failedActions button:hover {
+  text-decoration: underline;
+}
+
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}

@@ -1,0 +1,12 @@
+.tooltip {
+  composes: popover from './popover.module.css';
+  max-width: 240px;
+  padding: 6px 10px;
+  border-radius: var(--radius-xs);
+  background: rgb(20 22 26 / 0.92);
+  color: #fff;
+  font-size: 13px;
+  line-height: 18px;
+  pointer-events: none;
+  overflow-wrap: anywhere;
+}

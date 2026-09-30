@@ -1,0 +1,27 @@
+/* Общая анимация для всплывающих слоёв на Popover API. */
+.popover {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  opacity: 0;
+  transform: translateY(-4px) scale(0.98);
+  transition:
+    opacity 140ms var(--ease),
+    transform 140ms var(--ease),
+    overlay 140ms allow-discrete,
+    display 140ms allow-discrete;
+}
+
+.popover:popover-open {
+  opacity: 1;
+  transform: none;
+}
+
+@starting-style {
+  .popover:popover-open {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+}

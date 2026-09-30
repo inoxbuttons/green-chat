@@ -1,0 +1,13 @@
+.submit {
+  margin-top: 24px;
+}
+
+.formError {
+  margin-top: 4px;
+  padding: 10px 14px;
+  border-radius: var(--radius-m);
+  background: var(--c-danger-soft);
+  color: var(--c-danger);
+  font-size: 14px;
+  line-height: 20px;
+}

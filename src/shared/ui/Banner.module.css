@@ -1,0 +1,53 @@
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 10px 14px;
+  border-radius: var(--radius-l);
+  background: rgb(255 255 255 / 0.94);
+  box-shadow: var(--shadow-float);
+  backdrop-filter: blur(8px);
+  animation: banner-in var(--dur) var(--ease);
+}
+
+.icon {
+  display: inline-flex;
+  flex: none;
+}
+
+.info .icon {
+  color: var(--c-accent);
+}
+
+.warning .icon {
+  color: var(--c-warning);
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 19px;
+}
+
+.description {
+  margin-top: 1px;
+  font-size: 13px;
+  line-height: 17px;
+  color: var(--c-muted);
+}
+
+.action {
+  flex: none;
+}
+
+@keyframes banner-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}

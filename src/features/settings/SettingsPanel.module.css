@@ -1,0 +1,118 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.header {
+  display: flex;
+  flex: none;
+  align-items: center;
+  height: var(--header-h);
+  padding: 0 28px;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.scroll {
+  flex: 1;
+  min-height: 0;
+  padding: 8px 16px 16px;
+  overflow-y: auto;
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 0 20px;
+  text-align: center;
+}
+
+.profileName {
+  margin-top: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.profileSub {
+  font-size: 13px;
+  color: var(--c-muted);
+}
+
+.card {
+  margin: 0 0 16px;
+  padding: 4px 16px;
+  border-radius: var(--radius-l);
+  background: var(--c-hover);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 48px;
+  font-size: 15px;
+}
+
+.row + .row {
+  border-top: 1px solid var(--c-border);
+}
+
+.row dt {
+  color: var(--c-text-2);
+}
+
+.row dd {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  color: var(--c-muted);
+  text-align: right;
+}
+
+.mono {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 14px;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.ok {
+  color: var(--c-success);
+}
+
+.warn {
+  color: var(--c-warning);
+}
+
+.inlineBtn {
+  height: 32px;
+  margin-right: -10px;
+  padding: 0 10px;
+}
+
+.logout {
+  gap: 8px;
+}

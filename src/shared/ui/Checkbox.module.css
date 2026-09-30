@@ -1,0 +1,56 @@
+.root {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.input {
+  position: absolute;
+  opacity: 0;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+}
+
+.box {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 2px #c9ccd1;
+  color: transparent;
+  transition:
+    background-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.input:checked + .box {
+  background: var(--c-accent);
+  box-shadow: none;
+  color: #fff;
+}
+
+.input:focus-visible + .box {
+  box-shadow:
+    inset 0 0 0 2px var(--c-accent),
+    var(--focus-ring);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 15px;
+}
+
+.description {
+  font-size: 13px;
+  color: var(--c-muted);
+}

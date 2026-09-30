@@ -1,0 +1,101 @@
+.wrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.scroll {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(0 0 0 / 0.2) transparent;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  max-width: var(--content-w);
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 12px 16px 12px;
+}
+
+.dayRow {
+  position: sticky;
+  z-index: 1;
+  top: 8px;
+  display: flex;
+  justify-content: center;
+  margin: 12px 0 0;
+  pointer-events: none;
+}
+
+.day {
+  padding: 1px 8px;
+  border-radius: 10px;
+  background: var(--c-pill);
+  color: #fff;
+  font-size: 14px;
+  line-height: 20px;
+  backdrop-filter: blur(6px);
+}
+
+.scrollDown {
+  position: absolute;
+  right: 20px;
+  bottom: 12px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--c-surface);
+  color: var(--c-text-2);
+  box-shadow: var(--shadow-float);
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
+
+.scrollDownVisible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.emptyWrap {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  padding: 16px;
+}
+
+.emptyCard {
+  width: 100%;
+  max-width: 320px;
+  padding: 24px 20px;
+  border-radius: var(--radius-xl);
+  background: var(--c-card-glass);
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.emptyTitle {
+  margin: 0 0 8px;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.emptyText {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--c-text-2);
+  letter-spacing: 0.02em;
+}

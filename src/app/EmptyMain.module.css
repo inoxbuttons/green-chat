@@ -1,0 +1,30 @@
+.root {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  padding: 16px;
+}
+
+.pill {
+  padding: 4px 12px;
+  border-radius: 14px;
+  background: var(--c-pill);
+  color: #fff;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  backdrop-filter: blur(6px);
+}
+
+.bannerSlot {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  left: 16px;
+}
+
+.banner {
+  max-width: var(--content-w);
+  margin: 0 auto;
+}

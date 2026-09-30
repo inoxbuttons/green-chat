@@ -1,0 +1,71 @@
+.view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 12px;
+  height: var(--header-h);
+  padding: 0 16px 0 18px;
+  background: var(--c-surface);
+}
+
+.header > button {
+  margin-right: 4px;
+}
+
+.titles {
+  min-width: 0;
+}
+
+.name {
+  margin: 0;
+  overflow: hidden;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 21px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status {
+  margin: 1px 0 0;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 17px;
+  color: var(--c-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.body {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.bannerSlot {
+  flex: none;
+  padding: 0 16px;
+}
+
+.bannerSlot:empty {
+  display: none;
+}
+
+.banner {
+  max-width: var(--content-w);
+  margin: 12px auto 0;
+}
+
+.composerSlot {
+  flex: none;
+  padding: 0 16px 14px;
+}

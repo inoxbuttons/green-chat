@@ -1,0 +1,59 @@
+.loading {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--c-accent);
+}
+
+.layout {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+.sidebar {
+  flex: none;
+  width: var(--list-w);
+  min-width: 0;
+  overflow: hidden;
+  background: var(--c-sidebar);
+  border-right: 1px solid var(--c-border);
+  transition: width 220ms var(--ease);
+}
+
+.compact {
+  width: var(--list-compact-w);
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+}
+
+/* Мобильная раскладка: либо список, либо чат. */
+@media (max-width: 767px) {
+  .rail {
+    width: 64px;
+  }
+
+  .sidebar {
+    flex: 1;
+    width: auto;
+    border-right: 0;
+    transition: none;
+  }
+
+  .main {
+    display: none;
+  }
+
+  .chatOpen .rail,
+  .chatOpen .sidebar {
+    display: none;
+  }
+
+  .chatOpen .main {
+    display: block;
+  }
+}

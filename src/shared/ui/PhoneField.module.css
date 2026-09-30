@@ -1,0 +1,135 @@
+.field {
+  padding-left: 6px;
+}
+
+.trigger {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  height: 36px;
+  padding: 0 6px 0 8px;
+  border: 0;
+  border-radius: var(--radius-xs);
+  background: transparent;
+  font-size: 16px;
+  color: var(--c-text);
+  transition: background-color var(--dur) var(--ease);
+}
+
+.trigger:hover:not(:disabled) {
+  background: rgb(0 0 0 / 0.05);
+}
+
+.flag {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.dial {
+  font-variant-numeric: tabular-nums;
+}
+
+.chevron {
+  color: var(--c-text-2);
+  transition: transform var(--dur) var(--ease);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.picker {
+  composes: popover from './popover.module.css';
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  max-width: calc(100vw - 16px);
+  max-height: min(360px, calc(100vh - 32px));
+  padding: 6px;
+  border-radius: var(--radius-l);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-pop);
+}
+
+.picker:not(:popover-open) {
+  display: none;
+}
+
+.search {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  margin-bottom: 4px;
+  padding: 0 10px;
+  border-radius: var(--radius-s);
+  background: var(--c-field);
+  color: var(--c-muted);
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font-size: 15px;
+  color: var(--c-text);
+}
+
+.searchInput:focus-visible {
+  box-shadow: none;
+}
+
+.list {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 10px;
+  border-radius: var(--radius-s);
+  font-size: 15px;
+  cursor: pointer;
+  outline: none;
+}
+
+.option:hover,
+.option:focus-visible {
+  background: var(--c-hover);
+  box-shadow: none;
+}
+
+.selected {
+  background: var(--c-selected);
+}
+
+.countryName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.optionDial {
+  color: var(--c-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.empty {
+  padding: 16px 10px;
+  color: var(--c-muted);
+  font-size: 14px;
+  text-align: center;
+}
